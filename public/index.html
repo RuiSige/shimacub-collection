@@ -156,7 +156,8 @@ if(!state)return;
 }
 // スクリーンショット用一覧画面
 // 撮影モードを開始
-$('capturePreview').onclick = () => {
+$('capturePreview').onclick = (event) => {
+  event.stopPropagation();
   document.body.classList.add('captureMode');
 };
 
