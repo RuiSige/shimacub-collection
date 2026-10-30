@@ -132,7 +132,6 @@ export default {
         if (!/^[A-HJ-NP-Z2-9]{4}(-[A-HJ-NP-Z2-9]{4}){2}$/.test(code)) {
           return error("復元コードを確認してください");
         }
-}
 
         const user = await db.prepare(
           "SELECT id, nickname FROM participants WHERE recovery_code_hash = ?"
