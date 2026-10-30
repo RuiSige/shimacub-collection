@@ -164,11 +164,7 @@ $('openPreview').onclick = () => {
     img.src = imagePath(nums[selected[shop.id] || 0] || 3);
     img.alt = shop.name + ' のステッカー';
 
-    const name = document.createElement('div');
-    name.className = 'previewShop';
-    name.textContent = shop.name;
-
-    item.append(img, name);
+    item.append(img);
     $('previewGallery').append(item);
   }
 
