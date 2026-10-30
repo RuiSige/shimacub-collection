@@ -15,7 +15,10 @@
 <h1>MY COLLECTION</h1>
 <p class="muted">島をめぐって、ステッカーを集めよう。<br>持っているお店のステッカーをタップして、コレクションを記録できます。</p>
 <div id="loading" class="loading">読み込み中…</div>
-<section id="register" class="panel hidden"><h2>コレクションをはじめる</h2><p class="note">ニックネームを登録すると、自分だけのコレクションを保存できます。</p><label for="nickname">ニックネーム</label><input id="nickname" maxlength="30" placeholder="例：カブ太郎"><button id="join" class="primary">登録してはじめる</button><div id="regmsg" class="message" role="status"></div><details><summary>以前のコレクションを復元する</summary><p class="note">機種変更やブラウザのデータ削除後は、保存しておいた復元コードを入力してください。</p><label for="recover">復元コード</label><input id="recover" autocomplete="off"><button id="restore" class="secondary">復元する</button></details></section>
+<section id="register" class="panel hidden"><h2>コレクションをはじめる</h2><p class="note">
+ニックネームだけで無料登録。
+集めたステッカーをタップして、自分だけのコレクションを記録できます。
+</p><label for="nickname">ニックネーム</label><input id="nickname" maxlength="30" placeholder="例：カブ太郎"><button id="join" class="primary">登録してはじめる</button><div id="regmsg" class="message" role="status"></div><details><summary>以前のコレクションを復元する</summary><p class="note">機種変更やブラウザのデータ削除後は、保存しておいた復元コードを入力してください。</p><label for="recover">復元コード</label><input id="recover" autocomplete="off"><button id="restore" class="secondary">復元する</button></details></section>
 <section id="app" class="hidden"><div class="topline"><div class="userline" id="greeting"></div><div class="counter"><span id="count">0 / 20</span> <small>STATIONS</small></div></div><div class="track"><div id="bar"></div></div><div id="message" class="message" role="status"></div><div id="gallery" class="gallery"></div><section class="account"><h2>コレクションの引き継ぎ</h2><p class="note">復元コードは登録時に一度だけ表示されます。安全な場所に保存してください。コードを知っている人はコレクションを引き継げます。</p><div id="recoveryBox" class="hidden"><code id="recoveryCode" style="overflow-wrap:anywhere"></code><p><button id="copy" class="secondary">復元コードをコピー</button></p></div></section></section>
 </main>
 <script>
