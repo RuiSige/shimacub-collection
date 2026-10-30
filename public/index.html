@@ -155,7 +155,18 @@ if(!state)return;
  $('recoveryBox').classList.toggle('hidden',!recovery);$('recoveryCode').textContent=recovery;
 }
 // スクリーンショット用一覧画面
-$('openPreview').onclick = () => {
+// 撮影モードを開始
+$('capturePreview').onclick = () => {
+  document.body.classList.add('captureMode');
+};
+
+// 撮影モード中は画面タップで解除
+$('collectionPreview').addEventListener('click', () => {
+  if (document.body.classList.contains('captureMode')) {
+    document.body.classList.remove('captureMode');
+  }
+});
+  $('openPreview').onclick = () => {
   if (!state) return;
 
   const owned = new Set(state.owned || []);
