@@ -24,6 +24,18 @@ async function hash(value) {
 
 const makeToken = () =>
   crypto.randomUUID() + "." + crypto.randomUUID();
+// 復元コード：英数字12文字（4文字ごとに区切る）
+const makeRecoveryCode = () => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+
+  const code = [...bytes]
+    .map(b => chars[b & 31])
+    .join("");
+
+  return code.match(/.{1,4}/g).join("-");
+};
 
 async function readBody(request) {
   try {
@@ -95,7 +107,7 @@ export default {
 
         const id = crypto.randomUUID();
         const session = makeToken();
-        const recovery = makeToken();
+        const recovery = makeRecoveryCode();
 
         await db.prepare(
           "INSERT INTO participants (id, nickname, session_token_hash, recovery_code_hash) VALUES (?, ?, ?, ?)"
@@ -117,9 +129,10 @@ export default {
         const body = await readBody(request);
         const code = String(body.recovery || "").trim();
 
-        if (code.length < 40) {
+        if (!/^[A-HJ-NP-Z2-9]{4}(-[A-HJ-NP-Z2-9]{4}){2}$/.test(code)) {
           return error("復元コードを確認してください");
         }
+}
 
         const user = await db.prepare(
           "SELECT id, nickname FROM participants WHERE recovery_code_hash = ?"
