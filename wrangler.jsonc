@@ -6,5 +6,12 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "shimacub-collection-db",
+      "database_id": "324bede5-0332-4e8e-974c-6c76617a94ae"
+    }
+  ]
 }
