@@ -52,7 +52,39 @@ if(!state)return;
 }
 $('join').onclick=async()=>{const nickname=$('nickname').value.trim();if(!nickname)return notice('regmsg','ニックネームを入力してください',true);$('join').disabled=true;try{const r=await api('register',{nickname});session=r.session;recovery=r.recovery;localStorage.setItem(SESSION_KEY,session);state=r;render()}catch(e){notice('regmsg',e.message,true)}finally{$('join').disabled=false}};
 $('restore').onclick=async()=>{const btn=$('restore');btn.disabled=true;try{const r=await api('recover',{recovery:$('recover').value.trim()});session=r.session;recovery='';localStorage.setItem(SESSION_KEY,session);state=r;render()}catch(e){notice('regmsg',e.message,true)}finally{btn.disabled=false}};
-$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(recovery);alert('復元コードをコピーしました')}catch{alert('コピーできませんでした。コードを選択してコピーしてください')}};
+$('deleteAccount').onclick = async () => {
+  if (busy) return;
+
+  if (!confirm(
+    'ニックネーム・所有記録・復元コードを完全に削除します。\n' +
+    '削除後は元に戻せません。\n\n本当に削除しますか？'
+  )) return;
+
+  if (prompt('削除を確定するには「削除」と入力してください。') !== '削除') {
+    return;
+  }
+
+  busy = true;
+  $('deleteAccount').disabled = true;
+
+  try {
+    await api('delete-account', { confirm: 'DELETE' });
+
+    localStorage.removeItem(SESSION_KEY);
+    session = null;
+    state = null;
+    recovery = '';
+
+    render();
+    notice('regmsg', '登録情報を削除しました。新しく登録できます。');
+    window.scrollTo(0, 0);
+  } catch (e) {
+    notice('message', e.message, true);
+  } finally {
+    busy = false;
+    $('deleteAccount').disabled = false;
+  }
+};$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(recovery);alert('復元コードをコピーしました')}catch{alert('コピーできませんでした。コードを選択してコピーしてください')}};
 (async()=>{if(session){try{state=await api('me')}catch(e){if(e.message.includes('参加情報が見つかりません')){localStorage.removeItem(SESSION_KEY);session=null}else{notice('regmsg',e.message,true)}}}render()})();
 </script>
 </body></html>
