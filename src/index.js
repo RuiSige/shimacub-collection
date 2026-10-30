@@ -125,7 +125,22 @@ export default {
         });
       }
 
+
       if (path === "/api/recover" && request.method === "POST") {
+        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+        const { success } = await env.RECOVERY_LIMITER.limit({
+          key: ip
+        });
+
+        if (!success) {
+          return error(
+            "復元の試行回数が上限に達しました。1分ほど待ってからお試しください",
+            429
+          );
+        }
+
+
         const body = await readBody(request);
         const code = String(body.recovery || "").trim();
 
