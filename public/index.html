@@ -199,6 +199,7 @@ $('collectionPreview').addEventListener('click', () => {
 
 // 通常のコレクション画面に戻る
 $('closePreview').onclick = () => {
+  document.body.classList.remove('captureMode');
   $('collectionPreview').classList.add('hidden');
   render();
   window.scrollTo(0, 0);
