@@ -143,7 +143,49 @@ if(!state)return;
  if(nums.length>1){const dots=document.createElement('div');dots.className='variants';nums.forEach((num,i)=>{const dot=document.createElement('button');dot.type='button';dot.className=i===(selected[shop.id]||0)?'selected':'';dot.setAttribute('aria-label',shop.name+' デザイン '+(i+1));dot.onclick=()=>{selected[shop.id]=i;img.src=imagePath(num);[...dots.children].forEach((d,j)=>d.classList.toggle('selected',j===i))};dots.append(dot)});item.append(dots)}$('gallery').append(item)}
  $('recoveryBox').classList.toggle('hidden',!recovery);$('recoveryCode').textContent=recovery;
 }
-$('join').onclick=async()=>{const nickname=$('nickname').value.trim();if(!nickname)return notice('regmsg','ニックネームを入力してください',true);$('join').disabled=true;try{const r=await api('register',{nickname});session=r.session;recovery=r.recovery;localStorage.setItem(SESSION_KEY,session);state=r;render()}catch(e){notice('regmsg',e.message,true)}finally{$('join').disabled=false}};
+// スクリーンショット用一覧画面
+$('openPreview').onclick = () => {
+  if (!state) return;
+
+  const owned = new Set(state.owned || []);
+  const total = state.shops.length;
+  const count = state.shops.filter(shop => owned.has(shop.id)).length;
+
+  $('previewNickname').textContent = state.nickname + ' さん';
+  $('previewCount').textContent = count + ' / ' + total + ' STATIONS';
+  $('previewGallery').replaceChildren();
+
+  for (const shop of state.shops) {
+    const item = document.createElement('div');
+    item.className = 'previewItem' + (owned.has(shop.id) ? ' owned' : '');
+
+    const nums = stickers[shop.id] || [];
+    const img = document.createElement('img');
+    img.src = imagePath(nums[selected[shop.id] || 0] || 3);
+    img.alt = shop.name + ' のステッカー';
+
+    const name = document.createElement('div');
+    name.className = 'previewShop';
+    name.textContent = shop.name;
+
+    item.append(img, name);
+    $('previewGallery').append(item);
+  }
+
+  $('app').classList.add('hidden');
+  $('deleteSection').classList.add('hidden');
+  $('collectionPreview').classList.remove('hidden');
+
+  window.scrollTo(0, 0);
+};
+
+// 通常のコレクション画面に戻る
+$('closePreview').onclick = () => {
+  $('collectionPreview').classList.add('hidden');
+  render();
+  window.scrollTo(0, 0);
+};
+  $('join').onclick=async()=>{const nickname=$('nickname').value.trim();if(!nickname)return notice('regmsg','ニックネームを入力してください',true);$('join').disabled=true;try{const r=await api('register',{nickname});session=r.session;recovery=r.recovery;localStorage.setItem(SESSION_KEY,session);state=r;render()}catch(e){notice('regmsg',e.message,true)}finally{$('join').disabled=false}};
 $('restore').onclick=async()=>{const btn=$('restore');btn.disabled=true;try{const r=await api('recover',{recovery:$('recover').value.trim()});session=r.session;recovery='';localStorage.setItem(SESSION_KEY,session);state=r;render()}catch(e){notice('regmsg',e.message,true)}finally{btn.disabled=false}};
 $('deleteAccount').onclick = async () => {
   if (busy) return;
