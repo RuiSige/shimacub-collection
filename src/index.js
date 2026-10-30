@@ -151,6 +151,27 @@ export default {
         return json(await getState(db, user));
       }
 
+      // 登録情報の完全削除
+      if (path === "/api/delete-account" && request.method === "POST") {
+        const body = await readBody(request);
+
+        if (body.confirm !== "DELETE") {
+          return error("削除の確認が必要です");
+        }
+
+        // 所有記録と参加者情報を一括削除
+        await db.batch([
+          db.prepare(
+            "DELETE FROM stamps WHERE participant_id = ?"
+          ).bind(user.id),
+          db.prepare(
+            "DELETE FROM participants WHERE id = ?"
+          ).bind(user.id)
+        ]);
+
+        return json({ ok: true });
+      }
+
       if (path === "/api/toggle" && request.method === "POST") {
         const body = await readBody(request);
         const shopId = String(body.shop_id || "");
